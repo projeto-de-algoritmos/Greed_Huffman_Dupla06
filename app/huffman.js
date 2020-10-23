@@ -1,3 +1,13 @@
+/* DATA STRUCTURE TO EACH TREE NODE */
+class Node {
+    constructor(char, weight, left, right) {
+        this.char = char;
+        this.weight = weight;
+        this.left = left;
+        this.right = right;
+    }
+}
+
 /* CALCULATE FREQUENCY OF EACH CHARACTER ON A GIVEN STRING */
 const frequency = (str) => {
     var freqs = {};
@@ -12,34 +22,48 @@ const frequency = (str) => {
     return (freqs);
 }
 
-/* SORT FREQUENCY */
-const sortfreq = (freqs) => {
-    var tuples = [];
-    for (var keys in freqs) {
-        tuples.push([freqs[keys], keys]);
+/* SORTED FREQUENCY */
+const sortfreq = (str) => {
+    let dict = {};
+    let freqs = [];
+    for (var i in str) {
+        if (str[i] in dict) dict[str[i]] += 1;
+        else dict[str[i]] = 1;
     }
-    return tuples.sort();
+    for (var key in dict) {
+        freqs.push([key, dict[key]]);
+    }
+    return freqs.sort((a,b) => (b[1] - a[1]));
+}
+
+/* MAKE TREE NODES */
+const makenodes = (freqs) => {
+    let nodes = [];
+    for (let i = 0; i < freqs.length; i++) {
+        nodes.push(new Node(freqs[i][0], freqs[i][1]));
+    }
+    return nodes;
+}
+
+/* BUILD A TREE NODE */
+const makenode = (left, right) => {
+    return new Node(left.char + right.char, left.weight + right.weight, left, right);
 }
 
 /* BUILD A CODE TREE */
-const buildtree = (tuples) => {
-    while (tuples.length > 1) {
-        var leasttwo = [tuples[0][1], tuples[1][1]];
-        var rest = tuples.slice(2, tuples.length);
-        var combfreq = tuples[0][0] + tuples[1][0];
-        tuples = rest;
-        ext = [combfreq, leasttwo];
-        tuples.push(ext);
-        tuples.sort();
+const buildtree = (nodes) => {
+    while (nodes.length > 1) {
+        nodes.push(makenode(nodes.pop(), nodes.pop()));
+        nodes.sort((a,b) => (b.weight - a.weight));
     }
-    // console.log(tuples[0][1])
-    return tuples[0][1];
+
+    return nodes;
 }
 
 /* ASSIGN TABLE CODES */
 const assigncodes = (node, pat, codes = {}) => {
-    pat = pat || "";
-    if (typeof node == typeof "") {
+    pat = pat || '';
+    if (typeof node == typeof '') {
         codes[node] = pat;
     }
     else {
@@ -49,32 +73,52 @@ const assigncodes = (node, pat, codes = {}) => {
     return codes;
 }
 
-/* ENCODE A GIVEN INPUT INTO A CODE */
-const encode = (str, codes) => {
-    var output = "";
-    for (var ch in str) {
-        output = output + codes[str[ch]];
+/* ENCODE EACH CHARACTER */
+const encodeeach = (s, tree) => {
+    var encoded =[], curr_branch = tree[0];
+    while (curr_branch.left && curr_branch.right){
+        if((curr_branch.left.char).indexOf(s) != -1){
+            encoded.push(0);
+            curr_branch = curr_branch.left;
+        }
+        else if((curr_branch.right.char).indexOf(s) != -1){
+            encoded.push(1);
+            curr_branch =  curr_branch.right;
+        }
     }
-    return output;
+    return encoded;
 }
 
-/* DECODE A GIVEN OUTPUT USING A CODE TREE */
-const decode = (tree, str) => {
-    output = "";
-    p = tree;
-    for (var bit in str) {
-        if (str[bit] == 0) {
-            p = p[0];
+/* ENCODE A GIVEN INPUT INTO A CODE */
+const encode = (str) => {
+    let encoded = [];
+    for (var c in str)
+        encoded = encoded.concat(encodeeach(str[c]));
+    return encoded;
+}
+
+/* DECODE EACH CHARACTER OF A STRING OF BYTES */
+const decodeeach = (tree, bits) => {
+    if((tree.left && tree.right) && bits.length != 0){
+        if (bits[0] == 1) {
+                bits.shift();
+                return decodeeach(tree.right, bits);
         }
         else {
-            p = p[1];
-        }
-        if (typeof p == typeof "") {
-            output = output + p;
-            p = tree;
+                bits.shift();
+                return decodeeach(tree.left, bits);
         }
     }
-    return output;
+    else if(!tree.left && !tree.right)
+        return tree.char;
+}
+
+/* DECODE A STRING OF BYTES */
+const decode = (bits, tree) => {
+    var decoded = [];
+    while(bits.length != 0)
+        decoded.push(decodeeach(tree[0], bits));
+    return decoded.join('');
 }
 
 /* DRAW A HTML TABLE USING A MATRIX */
@@ -129,21 +173,17 @@ const compress = () => {
     }
 
     // Calculate character frequency
-    let freq = frequency(input);
+    let sorted = sortfreq(input);
     // Build a huffman code tree using sorted frequencies
-    tree = buildtree(sortfreq(freq));
-    console.log({tree})
-    // Assign each character code
-    let codes = assigncodes(tree);
+    tree = buildtree(makenodes(sorted));
 
     const table = [
         ['Caractere', 'Frequência', '%', 'Código'],
-        ...Object.entries(codes)
-            .map((([key, value]) => [key, `${ freq[key] }x`, `${ (freq[key] / input.length).toFixed(2) }%`, value]))
+        ...sorted
+            .map((([key, value]) => [key, `${ value }x`, `${ (((value / input.length)) * 100).toFixed(2) }%`, encodeeach(key, tree).join('')]))
             .sort((a, b) => a[1] < b[1] ? 1 : -1)
     ];
     draw(table);
-    console.log(encode(input, codes))
 }
 
 /* DECOMPRESS A TEXT STRING USING THE CURRENT TREE */
@@ -156,5 +196,5 @@ const decompress = () => {
         return;
     }
 
-    output.innerHTML = decode(tree, code);
+    output.innerHTML = decode(code.split(''), tree);
 }
