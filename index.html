@@ -3,14 +3,26 @@
 
 <head>
 	<meta charset="utf-8">
+	<title>Huffman</title>
 	<script src="app/huffman.js"></script>
-	<!-- <link rel="stylesheet" href="style.css"> -->
 </head>
 
 <body>
 	<div>
-        <!-- <script>start();</script> -->
-		<h1>Huffman</h1>
+		<h1>Código de Huffman</h1>
+	</div>
+
+	<div>
+		<div>
+			<label>Compressor:</label>
+			<textarea id="compress" oninput="compress()" placeholder="Escreva algum texto aqui. Ex.: Projeto de Algoritmos"></textarea>
+			<table id="codetable"></table>
+		</div>
+
+		<div>
+			<label>Decompressor:</label>
+			<textarea></textarea>
+		</div>
 	</div>
 </body>
 
