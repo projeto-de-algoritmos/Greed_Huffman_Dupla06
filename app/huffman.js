@@ -139,7 +139,7 @@ const compress = () => {
     const table = [
         ['Caractere', 'Frequência', '%', 'Código'],
         ...Object.entries(codes)
-            .map((([key, value]) => [key, freq[key], `${ (freq[key] / input.length).toFixed(2) }%`, value]))
+            .map((([key, value]) => [key, `${ freq[key] }x`, `${ (freq[key] / input.length).toFixed(2) }%`, value]))
             .sort((a, b) => a[1] < b[1] ? 1 : -1)
     ];
     draw(table);
