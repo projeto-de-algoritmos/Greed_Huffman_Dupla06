@@ -15,13 +15,25 @@
 	<div>
 		<div>
 			<label>Compressor:</label>
-			<textarea id="compress" oninput="compress()" placeholder="Escreva algum texto aqui. Ex.: Projeto de Algoritmos"></textarea>
+			<textarea
+				id="compress"
+				oninput="compress()"
+				placeholder="Escreva algum texto aqui. Ex.: Projeto de Algoritmos"
+			>
+			</textarea>
 			<table id="codetable"></table>
 		</div>
 
 		<div>
 			<label>Decompressor:</label>
-			<textarea id="decompress" oninput="decompress()" disabled></textarea>
+			<textarea
+				id="decompress"
+				oninput="decompress()"
+				placeholder="Escreva algum código aqui. Use apenas binário. [0-1]"
+				onkeyup="this.value = this.value.replace(/[^0-1]/g, '')"
+				disabled
+			>
+			</textarea>
 			<p id="output"></p>
 		</div>
 	</div>

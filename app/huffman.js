@@ -147,5 +147,11 @@ const compress = () => {
 const decompress = () => {
     const output = document.getElementById("output");
     const code = document.getElementById("decompress")?.value;
+
+    // Code doesn't match to only binary string
+    if (code.match(/[^0-1]/g)) {
+        return;
+    }
+
     output.innerHTML = decode(tree, code);
 }
