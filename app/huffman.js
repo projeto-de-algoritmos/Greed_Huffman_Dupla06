@@ -32,6 +32,7 @@ const buildtree = (tuples) => {
         tuples.push(ext);
         tuples.sort();
     }
+    // console.log(tuples[0][1])
     return tuples[0][1];
 }
 
@@ -49,7 +50,7 @@ const assigncodes = (node, pat, codes = {}) => {
 }
 
 /* ENCODE A GIVEN INPUT INTO A CODE */
-const encode = (str) => {
+const encode = (str, codes) => {
     var output = "";
     for (var ch in str) {
         output = output + codes[str[ch]];
@@ -131,6 +132,7 @@ const compress = () => {
     let freq = frequency(input);
     // Build a huffman code tree using sorted frequencies
     tree = buildtree(sortfreq(freq));
+    console.log({tree})
     // Assign each character code
     let codes = assigncodes(tree);
 
@@ -141,6 +143,7 @@ const compress = () => {
             .sort((a, b) => a[1] < b[1] ? 1 : -1)
     ];
     draw(table);
+    console.log(encode(input, codes))
 }
 
 /* DECOMPRESS A TEXT STRING USING THE CURRENT TREE */

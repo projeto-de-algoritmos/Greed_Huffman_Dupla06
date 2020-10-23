@@ -4,7 +4,8 @@
 <head>
 	<meta charset="utf-8">
 	<title>Huffman</title>
-	<link href="favicon.ico" type="image/x-icon"/>
+	<link rel="stylesheet" href="styles.css">
+	<link href="favicon.ico" type="image/x-icon">
 	<script src="app/huffman.js"></script>
 </head>
 
@@ -13,28 +14,28 @@
 		<h1>Código de Huffman</h1>
 	</div>
 
-	<div>
-		<div>
-			<label>Compressor:</label>
+	<div class="container">
+		<div class="content compressor">
+			<h2>Compressor</h2>
 			<textarea
+				class="input"
 				id="compress"
 				oninput="compress()"
 				placeholder="Escreva algum texto aqui. Ex.: Projeto de Algoritmos"
-			>
-			</textarea>
-			<table id="codetable"></table>
+			></textarea>
+			<table class="table" id="codetable"></table>
 		</div>
 
-		<div>
-			<label>Decompressor:</label>
+		<div class="content">
+			<h2>Decompressor</h2>
 			<textarea
+				class="input"
 				id="decompress"
 				oninput="decompress()"
 				placeholder="Escreva algum código aqui. Use apenas binário. [0-1]"
 				onkeyup="this.value = this.value.replace(/[^0-1]/g, '')"
 				disabled
-			>
-			</textarea>
+			></textarea>
 			<p id="output"></p>
 		</div>
 	</div>
