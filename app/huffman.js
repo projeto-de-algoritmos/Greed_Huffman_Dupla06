@@ -90,10 +90,10 @@ const encodeeach = (s, tree) => {
 }
 
 /* ENCODE A GIVEN INPUT INTO A CODE */
-const encode = (str) => {
+const encode = (str, tree) => {
     let encoded = [];
     for (var c in str)
-        encoded = encoded.concat(encodeeach(str[c]));
+        encoded = encoded.concat(encodeeach(str[c], tree));
     return encoded;
 }
 
@@ -176,7 +176,10 @@ const compress = () => {
     let sorted = sortfreq(input);
     // Build a huffman code tree using sorted frequencies
     tree = buildtree(makenodes(sorted));
-
+    let output = encode(input,tree);
+    output = output.join('');
+    document.getElementById("data").innerHTML = output;
+    document.getElementById("bits").innerHTML = output.length;
     const table = [
         ['Caractere', 'Frequência', '%', 'Código'],
         ...sorted
@@ -197,4 +200,10 @@ const decompress = () => {
     }
 
     output.innerHTML = decode(code.split(''), tree);
+}
+
+function countUtf8Bytes(s){
+    var b = 0, i = 0, c
+    for(;c=s.charCodeAt(i++);b+=c>>11?3:c>>7?2:1);
+    return b
 }
