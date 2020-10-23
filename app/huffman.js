@@ -94,17 +94,44 @@ const draw = (data) => {
     })
 }
 
+/* RESET TO EMPTY STATE */
+const reset = () => {
+    const table = document.getElementById('codetable');
+    // Reset table
+    table.innerHTML = '';
+
+    // Reset decompress input
+    document.getElementById("decompress").value = '';
+
+    // Reset decompress output
+    document.getElementById("output").innerHTML = '';
+}
+
+/* ======================= GLOBAL VARIABLES ======================== */
+let tree;
+/* ================================================================= */
+
 /* COMPRESS A TEXT STRING */
 const compress = () => {
     const input = document.getElementById("compress")?.value;
+
+    // Disable decompression if there is no input
+    const decompress = document.getElementById("decompress");
+    decompress.disabled = !input?.length;
+
+    // Reset table draw
+    reset();
     
     // Input is empty
     if (!input?.length) {
         return;
     }
 
+    // Calculate character frequency
     let freq = frequency(input);
-    let tree = buildtree(sortfreq(freq));
+    // Build a huffman code tree using sorted frequencies
+    tree = buildtree(sortfreq(freq));
+    // Assign each character code
     let codes = assigncodes(tree);
 
     const table = [
@@ -114,4 +141,11 @@ const compress = () => {
             .sort((a, b) => a[1] < b[1] ? 1 : -1)
     ];
     draw(table);
+}
+
+/* DECOMPRESS A TEXT STRING USING THE CURRENT TREE */
+const decompress = () => {
+    const output = document.getElementById("output");
+    const code = document.getElementById("decompress")?.value;
+    output.innerHTML = decode(tree, code);
 }
