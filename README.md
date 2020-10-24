@@ -22,7 +22,8 @@ O projeto consiste da criação da árvore de código de Huffman para um texto f
 **Framework**: Não se aplica<br>
 
 Você só precisará de um browser com Javascript habilitado.
-Para executar o projeto basta abrir o arquivo `index.html` em qualquer navegador.
+Para executar o projeto basta abrir o arquivo `index.html` em qualquer navegador. 
+Caso preferir, você também poderá acessar o projeto acessando o link https://projeto-de-algoritmos.github.io/Greed_Huffman_Dupla06/
 
 ## Uso 
 Digite um texto qualquer na caixa de texto de compressão e uma tabela com os códigos gerados pela árvore de Huffman irá aparecer.
